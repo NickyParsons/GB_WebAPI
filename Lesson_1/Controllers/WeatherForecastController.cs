@@ -22,34 +22,34 @@ namespace Lesson_1.Controllers
         public IActionResult GetTempRange([FromQuery] DateTime beginRange, [FromQuery] DateTime endRange)
         {
             List<WeatherForecast> resultList = new List<WeatherForecast>();
-            for (int i = 0; i < _holder.Values.Count; i++)
+            foreach (WeatherForecast weather in _holder.Values)
             {
-                if ((_holder.Values[i].DateTime >= beginRange) && (_holder.Values[i].DateTime <= endRange))
+                if ((weather.DateTime >= beginRange) && (weather.DateTime <= endRange))
                 {
-                    resultList.Add(_holder.Values[i]);
+                    resultList.Add(weather);
                 }
             }
             return Ok(resultList);
         }
 
         [HttpPost]
-        public IActionResult AddWeather([FromQuery]DateTime time, [FromQuery]int temp)
+        public IActionResult AddWeather([FromQuery]DateTime time, [FromQuery]int temperature)
         {
             WeatherForecast weather = new WeatherForecast();
             weather.DateTime = time;
-            weather.Temperature = temp;
+            weather.Temperature = temperature;
             _holder.Values.Add(weather);
             return Ok();
         }
 
         [HttpPut]
-        public IActionResult UpdateWeather([FromQuery] DateTime timeToUpdate, [FromQuery] int newTemp)
+        public IActionResult UpdateWeather([FromQuery] DateTime timeToUpdate, [FromQuery] int newTemperature)
         {
-            for (int i = 0; i < _holder.Values.Count; i++)
+            foreach (WeatherForecast weather in _holder.Values)
             {
-                if (_holder.Values[i].DateTime == timeToUpdate)
+                if (weather.DateTime == timeToUpdate)
                 {
-                    _holder.Values[i].Temperature = newTemp;
+                    weather.Temperature = newTemperature;
                 }
             }
             return Ok();
@@ -58,11 +58,11 @@ namespace Lesson_1.Controllers
         public IActionResult DeleteTempRange([FromQuery] DateTime beginRange, [FromQuery] DateTime endRange)
         {
             List<WeatherForecast> resultList = new List<WeatherForecast>();
-            for (int i = 0; i < _holder.Values.Count; i++)
+            foreach (WeatherForecast weather in _holder.Values)
             {
-                if ((_holder.Values[i].DateTime < beginRange) || (_holder.Values[i].DateTime > endRange))
+                if ((weather.DateTime < beginRange) || (weather.DateTime > endRange))
                 {
-                    resultList.Add(_holder.Values[i]);
+                    resultList.Add(weather);
                 }
             }
             _holder.Values = resultList;
