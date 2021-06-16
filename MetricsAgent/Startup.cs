@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data.SQLite;
+using MetricsAgent.DAL;
 
 namespace MetricsAgent
 {
@@ -26,7 +28,62 @@ namespace MetricsAgent
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            ConfigureSqlLiteConnection(services);
+            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+
         }
+
+        private void ConfigureSqlLiteConnection(IServiceCollection services)
+        {
+            const string connectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+            var connection = new SQLiteConnection(connectionString);
+            connection.Open();
+            PrepareSchema(connection);
+        }
+
+        private void PrepareSchema(SQLiteConnection connection)
+        {
+            using (var command = new SQLiteCommand(connection))
+            {
+                //cpu
+                command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO cpumetrics (value, time) VALUES (50, 1623827400)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO cpumetrics (value, time) VALUES (55, 1623827700)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO cpumetrics (value, time) VALUES (60, 1623828000)";
+                command.ExecuteNonQuery();
+                //ram
+                command.CommandText = "DROP TABLE IF EXISTS rammetrics";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+                //hdd
+                command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+                //network
+                command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+                //dotnet
+                command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
