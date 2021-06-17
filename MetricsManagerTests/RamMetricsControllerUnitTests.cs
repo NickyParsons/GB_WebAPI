@@ -2,16 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Xunit;
+using Moq;
+using Microsoft.Extensions.Logging;
 
 namespace MetricsManagerTests
 {
     public class RamMetricsControllerUnitTests
     {
-        private RamMetricsController controller;
+        private RamMetricsController _controller;
+        private Mock<ILogger<RamMetricsController>> _loggerMock;
 
         public RamMetricsControllerUnitTests()
         {
-            controller = new RamMetricsController();
+            _loggerMock = new Mock<ILogger<RamMetricsController>>();
+            _controller = new RamMetricsController(_loggerMock.Object);
         }
 
         [Fact]
@@ -23,7 +27,7 @@ namespace MetricsManagerTests
             var toTime = DateTimeOffset.Parse("10:30");
 
             //Act
-            var result = controller.GetMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -36,7 +40,7 @@ namespace MetricsManagerTests
             var toTime = DateTimeOffset.Parse("10:30");
 
             //Act
-            var result = controller.GetMetricsFromAllCluster(fromTime, toTime);
+            var result = _controller.GetMetricsFromAllCluster(fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

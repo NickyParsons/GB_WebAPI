@@ -35,13 +35,13 @@ namespace MetricsAgent.Controllers
         {
             _logger.LogInformation($"New query (fromTime: {fromTime}, toTime: {toTime})");
             var metrics = _repository.GetByTimePeriod(fromTime.ToUnixTimeSeconds(), toTime.ToUnixTimeSeconds());
-            var response = new AllCpuMetricsResponse()
+            var response = new AllRamMetricsResponse()
             {
-                Metrics = new List<CpuMetricDto>()
+                Metrics = new List<RamMetricDto>()
             };
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new CpuMetricDto { Time = DateTimeOffset.FromUnixTimeSeconds(metric.Time), Value = metric.Value, Id = metric.Id });
+                response.Metrics.Add(new RamMetricDto { Time = DateTimeOffset.FromUnixTimeSeconds(metric.Time), Value = metric.Value, Id = metric.Id });
             }
             return Ok(response);
         }

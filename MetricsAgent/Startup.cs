@@ -30,7 +30,10 @@ namespace MetricsAgent
             services.AddControllers();
             ConfigureSqlLiteConnection(services);
             services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
-
+            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
+            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
         }
 
         private void ConfigureSqlLiteConnection(IServiceCollection services)
@@ -63,11 +66,23 @@ namespace MetricsAgent
                 command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO rammetrics (value, time) VALUES (50, 1623827400)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO rammetrics (value, time) VALUES (55, 1623827700)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO rammetrics (value, time) VALUES (60, 1623828000)";
+                command.ExecuteNonQuery();
                 //hdd
                 command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
                 command.ExecuteNonQuery();
                 command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO hddmetrics (value, time) VALUES (50, 1623827400)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO hddmetrics (value, time) VALUES (55, 1623827700)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO hddmetrics (value, time) VALUES (60, 1623828000)";
                 command.ExecuteNonQuery();
                 //network
                 command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
@@ -75,11 +90,23 @@ namespace MetricsAgent
                 command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO networkmetrics (value, time) VALUES (50, 1623827400)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO networkmetrics (value, time) VALUES (55, 1623827700)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO networkmetrics (value, time) VALUES (60, 1623828000)";
+                command.ExecuteNonQuery();
                 //dotnet
                 command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
                 command.ExecuteNonQuery();
                 command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO dotnetmetrics (value, time) VALUES (50, 1623827400)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO dotnetmetrics (value, time) VALUES (55, 1623827700)";
+                command.ExecuteNonQuery();
+                command.CommandText = @"INSERT INTO dotnetmetrics (value, time) VALUES (60, 1623828000)";
                 command.ExecuteNonQuery();
             }
         }

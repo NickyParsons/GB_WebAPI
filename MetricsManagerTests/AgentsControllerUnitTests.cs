@@ -3,16 +3,20 @@ using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Xunit;
+using Moq;
+using Microsoft.Extensions.Logging;
 
 namespace MetricsManagerTests
 {
     public class AgentsControllerUnitTests
     {
-        private AgentsController controller;
+        private AgentsController _controller;
+        private Mock<ILogger<AgentsController>> _loggerMock;
 
         public AgentsControllerUnitTests()
         {
-            controller = new AgentsController();
+            _loggerMock = new Mock<ILogger<AgentsController>>();
+            _controller = new AgentsController(_loggerMock.Object);
         }
 
         [Fact]
@@ -21,7 +25,7 @@ namespace MetricsManagerTests
             //Arrange
 
             //Act
-            var result = controller.GetAgentsList();
+            var result = _controller.GetAgentsList();
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -33,7 +37,7 @@ namespace MetricsManagerTests
             AgentInfo agentInfo = new AgentInfo();
 
             //Act
-            var result = controller.RegisterAgent(agentInfo);
+            var result = _controller.RegisterAgent(agentInfo);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -45,7 +49,7 @@ namespace MetricsManagerTests
             var agentId = 1;
 
             //Act
-            var result = controller.EnableAgentById(agentId);
+            var result = _controller.EnableAgentById(agentId);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -57,7 +61,7 @@ namespace MetricsManagerTests
             var agentId = 1;
 
             //Act
-            var result = controller.DisableAgentById(agentId);
+            var result = _controller.DisableAgentById(agentId);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

@@ -5,6 +5,8 @@ using System;
 using Xunit;
 using Moq;
 using Microsoft.Extensions.Logging;
+using MetricsAgent.Metrics;
+using System.Collections.Generic;
 
 namespace MetricsAgentTests
 {
@@ -22,17 +24,18 @@ namespace MetricsAgentTests
         }
 
         [Fact]
-        public void GetNetworkMetrics_ReturnsOk()
+        public void GetByTimePeriod_ReturnsOk()
         {
             //Arrange
-            var fromTime = DateTimeOffset.Parse("10:00");
-            var toTime = DateTimeOffset.Parse("10:30");
+            long fromTime = 1623827400;
+            long toTime = 1623828100;
+            _repositoryMock.Setup(repository => repository.GetByTimePeriod(It.IsAny<long>(), It.IsAny<long>())).Returns(new List<NetworkMetric>());
 
             //Act
-            var result = _controller.GetNetworkMetrics(fromTime, toTime);
+            var result = _controller.GetNetworkMetrics(DateTimeOffset.FromUnixTimeSeconds(fromTime), DateTimeOffset.FromUnixTimeSeconds(toTime));
 
             // Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            _repositoryMock.Verify(repository => repository.GetByTimePeriod(It.IsAny<long>(), It.IsAny<long>()), Times.AtMostOnce());
         }
     }
 }

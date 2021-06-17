@@ -30,18 +30,18 @@ namespace MetricsAgent.Controllers
             return Ok();
         }
 
-        [HttpGet("errors-count/from/{fromTime}/to/{toTime}")]
+        [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetErrorsCount([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"New query (fromTime: {fromTime}, toTime: {toTime})");
             var metrics = _repository.GetByTimePeriod(fromTime.ToUnixTimeSeconds(), toTime.ToUnixTimeSeconds());
-            var response = new AllCpuMetricsResponse()
+            var response = new AllDotNetMetricsResponse()
             {
-                Metrics = new List<CpuMetricDto>()
+                Metrics = new List<DotNetMetricDto>()
             };
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new CpuMetricDto { Time = DateTimeOffset.FromUnixTimeSeconds(metric.Time), Value = metric.Value, Id = metric.Id });
+                response.Metrics.Add(new DotNetMetricDto { Time = DateTimeOffset.FromUnixTimeSeconds(metric.Time), Value = metric.Value, Id = metric.Id });
             }
             return Ok(response);
         }

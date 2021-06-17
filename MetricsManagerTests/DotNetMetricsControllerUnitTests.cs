@@ -2,16 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Xunit;
+using Moq;
+using Microsoft.Extensions.Logging;
 
 namespace MetricsManagerTests
 {
     public class DotNetMetricsControllerUnitTests
     {
-        private DotNetMetricsController controller;
+        private DotNetMetricsController _controller;
+        private Mock<ILogger<DotNetMetricsController>> _loggerMock;
 
         public DotNetMetricsControllerUnitTests()
         {
-            controller = new DotNetMetricsController();
+            _loggerMock = new Mock<ILogger<DotNetMetricsController>>();
+            _controller = new DotNetMetricsController(_loggerMock.Object);
         }
 
         [Fact]
@@ -23,7 +27,7 @@ namespace MetricsManagerTests
             var toTime = DateTimeOffset.Parse("10:30");
 
             //Act
-            var result = controller.GetMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -36,7 +40,7 @@ namespace MetricsManagerTests
             var toTime = DateTimeOffset.Parse("10:30");
 
             //Act
-            var result = controller.GetMetricsFromAllCluster(fromTime, toTime);
+            var result = _controller.GetMetricsFromAllCluster(fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
