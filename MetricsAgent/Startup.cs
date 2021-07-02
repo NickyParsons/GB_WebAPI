@@ -14,6 +14,7 @@ using System.Data.SQLite;
 using MetricsAgent.DAL.Interfaces;
 using MetricsAgent.DAL.Repositories;
 using MetricsAgent.DAL.ConnectionMananagers;
+using Core.Interfaces;
 
 namespace MetricsAgent
 {
@@ -36,6 +37,7 @@ namespace MetricsAgent
             services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
             services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddScoped<IConnectionManager, SQLiteConnectionManager>();
         }
 
         private void ConfigureSqlLiteConnection(IServiceCollection services)
@@ -59,11 +61,11 @@ namespace MetricsAgent
                 command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO cpumetrics (value, time) VALUES (50, {time1})";
+                command.CommandText = $@"INSERT INTO cpumetrics (value, time) VALUES (17, {time1})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO cpumetrics (value, time) VALUES (55, {time2})";
+                command.CommandText = $@"INSERT INTO cpumetrics (value, time) VALUES (23, {time2})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO cpumetrics (value, time) VALUES (60, {time3})";
+                command.CommandText = $@"INSERT INTO cpumetrics (value, time) VALUES (28, {time3})";
                 command.ExecuteNonQuery();
                 //ram
                 command.CommandText = "DROP TABLE IF EXISTS rammetrics";
@@ -83,11 +85,11 @@ namespace MetricsAgent
                 command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO hddmetrics (value, time) VALUES (50, {time1})";
+                command.CommandText = $@"INSERT INTO hddmetrics (value, time) VALUES (45, {time1})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO hddmetrics (value, time) VALUES (55, {time2})";
+                command.CommandText = $@"INSERT INTO hddmetrics (value, time) VALUES (45, {time2})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO hddmetrics (value, time) VALUES (60, {time3})";
+                command.CommandText = $@"INSERT INTO hddmetrics (value, time) VALUES (45, {time3})";
                 command.ExecuteNonQuery();
                 //network
                 command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
@@ -95,11 +97,11 @@ namespace MetricsAgent
                 command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO networkmetrics (value, time) VALUES (50, {time1})";
+                command.CommandText = $@"INSERT INTO networkmetrics (value, time) VALUES (2, {time1})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO networkmetrics (value, time) VALUES (55, {time2})";
+                command.CommandText = $@"INSERT INTO networkmetrics (value, time) VALUES (5, {time2})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO networkmetrics (value, time) VALUES (60, {time3})";
+                command.CommandText = $@"INSERT INTO networkmetrics (value, time) VALUES (4, {time3})";
                 command.ExecuteNonQuery();
                 //dotnet
                 command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
@@ -107,11 +109,11 @@ namespace MetricsAgent
                 command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO dotnetmetrics (value, time) VALUES (50, {time1})";
+                command.CommandText = $@"INSERT INTO dotnetmetrics (value, time) VALUES (0, {time1})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO dotnetmetrics (value, time) VALUES (55, {time2})";
+                command.CommandText = $@"INSERT INTO dotnetmetrics (value, time) VALUES (0, {time2})";
                 command.ExecuteNonQuery();
-                command.CommandText = $@"INSERT INTO dotnetmetrics (value, time) VALUES (60, {time3})";
+                command.CommandText = $@"INSERT INTO dotnetmetrics (value, time) VALUES (0, {time3})";
                 command.ExecuteNonQuery();
             }
         }

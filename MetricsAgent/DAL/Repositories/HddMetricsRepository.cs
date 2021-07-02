@@ -1,31 +1,25 @@
-﻿using MetricsAgent.DAL.Models;
+﻿using System;
+using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Interfaces;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using MetricsAgent.DAL.ConnectionMananagers;
+using Dapper;
+using Core.Interfaces;
 
 namespace MetricsAgent.DAL.Repositories
 {
     public class HddMetricsRepository : IHddMetricsRepository
     {
-        SQLiteConnectionManager _connectionManager;
-        public HddMetricsRepository()
+        IConnectionManager _connectionManager;
+        public HddMetricsRepository(IConnectionManager connectionManager)
         {
-            _connectionManager = new SQLiteConnectionManager();
+            _connectionManager = connectionManager;
         }
         public void Create(HddMetric item)
         {
             using var connection = _connectionManager.GetOpenedConnection();
             {
-                connection.Open();
-                using var cmd = new SQLiteCommand(connection);
-                {
-                    cmd.CommandText = "INSERT INTO hddmetrics(value, time) VALUES(@value, @time)";
-                    cmd.Parameters.AddWithValue("@value", item.Value);
-                    cmd.Parameters.AddWithValue("@time", item.Time);
-                    cmd.Prepare();
-                    cmd.ExecuteNonQuery();
-                }
+                connection.Execute("INSERT INTO hddmetrics(value, time) VALUES(@value, @time)", new { value = item.Value, time = item.Time });
             }
         }
 
@@ -33,30 +27,7 @@ namespace MetricsAgent.DAL.Repositories
         {
             using var connection = _connectionManager.GetOpenedConnection();
             {
-                connection.Open();
-                using var cmd = new SQLiteCommand(connection);
-                {
-                    cmd.CommandText = "SELECT * FROM hddmetrics WHERE time BETWEEN @fromTime AND @toTime";
-                    cmd.Parameters.AddWithValue("@fromTime", fromTime);
-                    cmd.Parameters.AddWithValue("@toTime", toTime);
-                    cmd.Prepare();
-                    var returnList = new List<HddMetric>();
-                    using (SQLiteDataReader reader = cmd.ExecuteReader())
-                    {
-                        // пока есть что читать -- читаем
-                        while (reader.Read())
-                        {
-                            // добавляем объект в список возврата
-                            returnList.Add(new HddMetric
-                            {
-                                Id = reader.GetInt32(0),
-                                Value = reader.GetInt32(1),
-                                Time = reader.GetInt32(2)
-                            });
-                        }
-                    }
-                    return returnList;
-                }
+                return (List<HddMetric>)connection.Query<HddMetric>("SELECT * FROM hddmetrics WHERE time BETWEEN @fromTime AND @toTime", new { fromTime = fromTime, toTime = toTime });
             }
         }
     }
