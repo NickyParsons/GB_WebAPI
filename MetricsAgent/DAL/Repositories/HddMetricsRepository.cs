@@ -1,19 +1,21 @@
 ﻿using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Data.SQLite;
+using MetricsAgent.DAL.ConnectionMananagers;
 
 namespace MetricsAgent.DAL.Repositories
 {
     public class HddMetricsRepository : IHddMetricsRepository
     {
-        private const string ConnectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+        SQLiteConnectionManager _connectionManager;
+        public HddMetricsRepository()
+        {
+            _connectionManager = new SQLiteConnectionManager();
+        }
         public void Create(HddMetric item)
         {
-            using var connection = new SQLiteConnection(ConnectionString);
+            using var connection = _connectionManager.GetOpenedConnection();
             {
                 connection.Open();
                 using var cmd = new SQLiteCommand(connection);
@@ -29,7 +31,7 @@ namespace MetricsAgent.DAL.Repositories
 
         public IList<HddMetric> GetByTimePeriod(long fromTime, long toTime)
         {
-            using var connection = new SQLiteConnection(ConnectionString);
+            using var connection = _connectionManager.GetOpenedConnection();
             {
                 connection.Open();
                 using var cmd = new SQLiteCommand(connection);

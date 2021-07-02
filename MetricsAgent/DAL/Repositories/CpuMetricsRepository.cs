@@ -1,21 +1,22 @@
 ﻿using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Data.SQLite;
+using MetricsAgent.DAL.ConnectionMananagers;
 
 namespace MetricsAgent.DAL.Repositories
 {
     public class CpuMetricsRepository : ICpuMetricsRepository
     {
-        private const string ConnectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+        SQLiteConnectionManager _connectionManager;
+        public CpuMetricsRepository()
+        {
+            _connectionManager = new SQLiteConnectionManager();
+        }
         public void Create(CpuMetric item)
         {
-            using var connection = new SQLiteConnection(ConnectionString);
+            using var connection = _connectionManager.GetOpenedConnection();
             {
-                connection.Open();
                 using var cmd = new SQLiteCommand(connection);
                 {
                     cmd.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(@value, @time)";
@@ -29,11 +30,11 @@ namespace MetricsAgent.DAL.Repositories
 
         public IList<CpuMetric> GetByTimePeriod(long fromTime, long toTime)
         {
-            using var connection = new SQLiteConnection(ConnectionString);
+            using var connection = _connectionManager.GetOpenedConnection();
             {
-                connection.Open();
                 using var cmd = new SQLiteCommand(connection);
                 {
+                    cmd.Connection = connection;
                     cmd.CommandText = "SELECT * FROM cpumetrics WHERE time BETWEEN @fromTime AND @toTime";
                     cmd.Parameters.AddWithValue("@fromTime", fromTime);
                     cmd.Parameters.AddWithValue("@toTime", toTime);
