@@ -1,12 +1,12 @@
 using MetricsAgent.Controllers;
-using MetricsAgent.DAL;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using Xunit;
 using Moq;
 using Microsoft.Extensions.Logging;
-using MetricsAgent.Metrics;
+using MetricsAgent.DAL.Interfaces;
+using MetricsAgent.DAL.Models;
 using System.Collections.Generic;
+using AutoMapper;
 
 namespace MetricsAgentTests
 {
@@ -15,12 +15,14 @@ namespace MetricsAgentTests
         private CpuMetricsController _controller;
         private Mock<ILogger<CpuMetricsController>> _loggerMock;
         private Mock<ICpuMetricsRepository> _repositoryMock;
+        private Mock<IMapper> _mapper;
 
         public CpuMetricsControllerUnitTests()
         {
             _loggerMock = new Mock<ILogger<CpuMetricsController>>();
             _repositoryMock = new Mock<ICpuMetricsRepository>();
-            _controller = new CpuMetricsController(_repositoryMock.Object ,_loggerMock.Object);
+            _mapper = new Mock<IMapper>();
+            _controller = new CpuMetricsController(_repositoryMock.Object ,_loggerMock.Object, _mapper.Object);
         }
 
         [Fact]
