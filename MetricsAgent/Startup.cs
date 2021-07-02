@@ -15,6 +15,8 @@ using MetricsAgent.DAL.Interfaces;
 using MetricsAgent.DAL.Repositories;
 using MetricsAgent.DAL.ConnectionMananagers;
 using Core.Interfaces;
+using AutoMapper;
+using MetricsAgent.AutoMapper;
 
 namespace MetricsAgent
 {
@@ -38,6 +40,9 @@ namespace MetricsAgent
             services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
             services.AddScoped<IConnectionManager, SQLiteConnectionManager>();
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         private void ConfigureSqlLiteConnection(IServiceCollection services)
