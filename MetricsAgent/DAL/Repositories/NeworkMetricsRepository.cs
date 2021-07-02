@@ -1,11 +1,12 @@
-﻿using MetricsAgent.Metrics;
+﻿using MetricsAgent.DAL.Models;
+using MetricsAgent.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 
-namespace MetricsAgent.DAL
+namespace MetricsAgent.DAL.Repositories
 {
     public class NetworkMetricsRepository : INetworkMetricsRepository
     {

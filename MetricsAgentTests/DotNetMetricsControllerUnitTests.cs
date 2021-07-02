@@ -5,7 +5,8 @@ using System;
 using Xunit;
 using Moq;
 using Microsoft.Extensions.Logging;
-using MetricsAgent.Metrics;
+using MetricsAgent.DAL.Interfaces;
+using MetricsAgent.DAL.Models;
 using System.Collections.Generic;
 
 namespace MetricsAgentTests

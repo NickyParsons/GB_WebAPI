@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MetricsAgent.Metrics
+namespace MetricsAgent.DAL.Models
 {
-    public class CpuMetric
+    public class RamMetric
     {
         public int Id { get; set; }
         public int Value { get; set; }
