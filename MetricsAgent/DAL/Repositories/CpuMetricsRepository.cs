@@ -17,6 +17,7 @@ namespace MetricsAgent.DAL.Repositories
         }
         public void Create(CpuMetric item)
         {
+            _connectionManager.CreateOpenedConnection();
             using var connection = _connectionManager.GetOpenedConnection();
             {
                 connection.Execute("INSERT INTO cpumetrics(value, time) VALUES(@value, @time)", new { value = item.Value, time = item.Time });
@@ -25,6 +26,7 @@ namespace MetricsAgent.DAL.Repositories
 
         public IList<CpuMetric> GetByTimePeriod(long fromTime, long toTime)
         {
+            _connectionManager.CreateOpenedConnection();
             using var connection = _connectionManager.GetOpenedConnection();
             {
                 return (List<CpuMetric>)connection.Query<CpuMetric>("SELECT * FROM cpumetrics WHERE time BETWEEN @fromTime AND @toTime", new { fromTime  = fromTime, toTime = toTime });
